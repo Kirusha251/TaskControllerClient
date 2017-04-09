@@ -1,0 +1,98 @@
+
+<div class="ui-grid ui-grid-responsive ui-fluid ui-grid-pad">
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-2"><label for="projectName">Name</label></div>
+    <div class="ui-grid-col-8">
+      <input style="width: 200px;" id="projectName" type="text" size="30" pInputText [disabled]="isDisabled" [(ngModel)]="project.name" #projectName="ngModel" />
+    </div>
+  </div>
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-2"><label for="createdAt">Created At</label></div>
+    <div class="ui-grid-col-8">
+      <!--<p-calendar [(ngModel)]="project.createdAt" id="createdAt" [disabled]="isDisabled"></p-calendar>-->
+      <input style="width: 200px;" type="text"  pInputText id="createdAt" [(ngModel)]="project.createdAt" #createdAt="ngModel" [disabled]="true"/>
+    </div>
+  </div>
+  <button style="width: 100px;" type="button" id="changeButton" (click)="toggleDisabled()" pButton label="Change"></button>
+</div>
+
+<p-dataList [value]="tasks" [paginator]="true" [rows]="3"  selectionMode="single">
+  <p-header>
+    <div style="float: left; margin-right: -150px">
+    <p-toggleButton *ngIf="isDeveloper()" onLabel="All Tasks" offLabel="Just For Me" [(ngModel)]="checked" (click)="justForDeveloper()"></p-toggleButton>
+    </div>
+    List of Tasks
+  </p-header>
+  <ng-template let-task pTemplate="item">
+    <div class="ui-grid ui-grid-responsive ui-fluid" style="font-size:16px;padding:20px;border-bottom:1px solid #D5D5D5;">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-1" style="text-align:center"><i class="fa fa-search" (click)="selectTask(task.id)" style="cursor:pointer;float:left;margin-top:40px"></i></div>
+        <div class="ui-grid-col-9">
+          <div class="ui-grid ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-2">Name: </div>
+              <div class="ui-grid-col-10">{{task.name}}</div>
+            </div>
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-2">Status: </div>
+              <div class="ui-grid-col-10">{{task.status}}</div>
+            </div>
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-2">Description: </div>
+              <div class="ui-grid-col-10"><textarea pInputTextarea disabled="false" rows="7" cols="40" autoResize="false" style="background-color: white; resize: none">{{task.description}}</textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <p-footer>
+    <button pButton type="text" (click)="displayDialog(click)" label="Add new task"></button>
+  </p-footer>
+</p-dataList>
+<p-pickList [source]="freeDevelopers" [target]="targetProjectDevelopers" sourceHeader="Available Developers"
+            targetHeader="Selected Developers" [responsive]="true" [sourceStyle]="{'height':'300px'}"
+            [targetStyle]="{'height':'300px'}"
+            (onMoveToTarget)="moveToTarget()"
+            (onMoveToSource)="moveToSource()"
+>
+  <ng-template let-user pTemplate="item">
+    <div class="ui-helper-clearfix">
+      <div style="font-size:14px;float:left;margin:15px 5px 0 0">Name:{{user.username}}</div>
+    </div>
+  </ng-template>
+</p-pickList>
+
+<p-dialog header="Add Task" [(visible)]="dialogVisible"   [responsive]="true" showEffect="fade" [modal]="true" >
+  <div class="ui-grid ui-grid-responsive ui-fluid ui-grid-pad" *ngIf="task">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4"><label for="drop">Developer</label></div>
+      <div class="ui-grid-col-8">
+        <p-dropdown name="drop" [options]="developers" [(ngModel)]="model.selected" placeholder="Select developer" [autoWidth]="false" serve=true></p-dropdown>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4"><label for="name">Name</label></div>
+      <div class="ui-grid-col-8"><input type="text" pInputText id="name" [(ngModel)]="task.name" #name="ngModel"/></div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4"><label for="status">Status</label></div>
+      <div class="ui-grid-col-8">
+        <p-dropdown id="status" [options]="statuses" [(ngModel)]="selectedStatus" placeholder="Set status"  [autoWidth]="false"></p-dropdown>
+        <!--<input type="text" pInputText id="status" [(ngModel)]="task.status"/>-->
+      </div>
+    </div>
+    <div class="ui-grid-row">
+    <div class="ui-grid-col-4"><label for="description">Description</label></div>
+    <div class="ui-grid-col-8">
+      <textarea id="description" pInputTextarea rows="7" cols="25" autoResize="false" style="background-color: white; resize: none" [(ngModel)]="task.description"></textarea>
+    </div>
+  </div>
+  </div>
+  <footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <button type="button" pButton icon="fa-check" (click)="save()" label="Save"></button>
+    </div>
+  </footer>
+</p-dialog>
+

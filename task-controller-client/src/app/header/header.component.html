@@ -1,0 +1,9 @@
+<nav class="navbar navbar-inverse bg-primary">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand">Tracker</a>
+      <p style="color: white;" *ngIf="checkForLogin()" class="navbar-text navbar-right">Signed in as <a style="color: white;" href="#" class="navbar-link">{{username}}</a></p>
+      <p class="navbar-text navbar-right" *ngIf="checkForLogin()" style="color: white;"><a style="color: white;" (click)="logout()" class="navbar-link">Logout</a></p>
+    </div>
+  </div>
+</nav>
